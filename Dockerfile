@@ -7,4 +7,4 @@ RUN apk --no-cache add libxaw-dev
 
 COPY .latexmkrc /root/
 
-CMD [ "latexmk" ]
+ENTRYPOINT [ "latexmk" ]
