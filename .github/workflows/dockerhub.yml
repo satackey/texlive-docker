@@ -1,0 +1,14 @@
+name: Dockerhub Build Trigger
+
+on:
+  schedule:
+  - cron: '0  0  *  *  *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run a multi-line script
+      run: curl -X POST ${{ secrets.DOCKERHUB_BUILD_TRIGGER_URL }}
