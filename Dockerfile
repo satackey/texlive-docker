@@ -14,7 +14,7 @@ RUN apk update && apk --no-cache add \
         libxaw-dev \
         wget \
     && tlmgr update --self --all \
-    && tlmgr install siunitx
+    && tlmgr install siunitx \
     && apk del wget
 
 COPY --from=download-files /src/jlisting.sty /usr/local/texlive/2019/texmf-dist/tex/latex/listings/
