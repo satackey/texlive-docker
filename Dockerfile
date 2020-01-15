@@ -10,14 +10,15 @@ RUN bunzip2 jlisting.sty.bz2
 
 FROM paperist/alpine-texlive-ja
 
+COPY --from=download-files /src/jlisting.sty /usr/local/texlive/2019/texmf-dist/tex/latex/listings/
 RUN apk update && apk --no-cache add --virtual .install-deps \
         # libxaw-dev \
         wget \
     && tlmgr update --self --all \
     && tlmgr install siunitx \
-    && apk del .install-deps
+    && apk del .install-deps \
+    && mktexlsr
 
-COPY --from=download-files /src/jlisting.sty /usr/local/texlive/2019/texmf-dist/tex/latex/listings/
 COPY .latexmkrc /root/
 
 ENTRYPOINT [ "latexmk" ]
