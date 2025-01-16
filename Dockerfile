@@ -1,25 +1,26 @@
-FROM ubuntu:18.04 AS download-files
+FROM ghcr.io/paperist/texlive-ja:latest@sha256:4c76f75916fbab1d9b6a0528be37cf4967ed993beb9906908c390632ca7db153
 
-RUN apt-get update && apt-get install -y \
-    wget
-
-WORKDIR /src
-
-RUN wget -O jlisting.sty.bz2 'https://osdn.net/frs/redir.php?m=jaist&f=mytexpert%2F26068%2Fjlisting.sty.bz2'
-RUN bunzip2 jlisting.sty.bz2
-
-FROM paperist/alpine-texlive-ja
-
-COPY --from=download-files /src/jlisting.sty /usr/local/texlive/2020/texmf-dist/tex/latex/listings/
 RUN set -x \
-    && apk update && apk --no-cache add --virtual .install-deps wget \
-    && curl -O 'https://ctan.math.washington.edu/tex-archive/systems/texlive/tlnet/update-tlmgr-latest.sh' \
-    && chmod +x update-tlmgr-latest.sh \
-    && ./update-tlmgr-latest.sh \
+    && apt-get update && apt-get install -y \
+        wget \
+        bzip2 \
+    && mkdir /tmp/texlive \
+    && wget -O jlisting.sty.bz2 --no-check-certificate 'https://osdn.net/frs/redir.php?m=jaist&f=mytexpert%2F26068%2Fjlisting.sty.bz2' \
+    && wget --no-check-certificate -O update-tlmgr-latest 'https://ctan.math.washington.edu/tex-archive/systems/texlive/tlnet/update-tlmgr-latest.sh' \
+    && bunzip2 jlisting.sty.bz2 \
+    && chmod +x update-tlmgr-latest \
+    && mv jlisting.sty "$(kpsewhich -var-value TEXMFDIST)/tex/latex/listings/" \
+    && mv update-tlmgr-latest /usr/local/bin/ \
+    && update-tlmgr-latest \
     && tlmgr update --self --all \
     && tlmgr install siunitx \
-    && apk del .install-deps \
-    && mktexlsr
+    && apt-get remove -y \
+        wget \
+        bzip2 \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/texlive
 
 COPY .latexmkrc /root/
 
