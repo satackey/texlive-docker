@@ -1,4 +1,4 @@
-name: Dockerhub Build Trigger
+name: Build and push texlive
 
 on:
   push:
