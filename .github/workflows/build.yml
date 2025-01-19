@@ -1,9 +1,6 @@
 name: Build and push texlive
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   build:
@@ -31,7 +28,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        push: true
+        push: ${{ github.ref == 'refs/heads/master' }}
         tags: |
           ghcr.io/satackey/texlive:debian
           ghcr.io/satackey/texlive:latest
