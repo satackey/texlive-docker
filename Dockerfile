@@ -1,4 +1,4 @@
-FROM ghcr.io/paperist/texlive-ja:latest@sha256:9f4cd0d2ae035ddd6c62e5ffc3b1fd27fb280174c848ba3d85e48976034cec7c
+FROM ghcr.io/paperist/texlive-ja:latest@sha256:87f169656b86a4d6d1c082723249c202aef39cd7deeb484e65ec33ca57eab868
 
 RUN set -x \
     && apt-get update && apt-get install -y \
